@@ -45,6 +45,7 @@ Preparar um dataset de biossinais (ECG) para aplicação de técnicas de Reconhe
 Biossinais/
 ├── README.md                    # Este arquivo
 ├── docs/                        # Documentos de referência
+│   ├── research/                # Documentos que serviram de base ou compuseram a pesquisa deste projeto ( nem todos foram usados, alguns são só curiosidade )
 │   ├── pipeline.pdf             # Pipeline da disciplina
 │   └── Modelo_de_Trabalho_Academico_UFC.zip
 ├── entregaveis/                 # Entregáveis individuais
