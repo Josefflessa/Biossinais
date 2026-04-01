@@ -688,13 +688,13 @@ Tabela com número de registros que foram submetidos a cada técnica, número de
 
 Descrever as três abordagens e suas implicações:
 
-**Opção A — Registro inteiro como instância única:** Cada registro de 10s é uma instância. Shape resultante: 21.837 × 1000 × 12 (ou × 5000 para 500 Hz). Vantagens: sem perda de contexto temporal, sem sobreposição artificial. Desvantagens: alto custo computacional para features clássicas; inadequado para análise de segmentos curtos.
+**Opção A — Registro inteiro como instância única (Recomendada):** Cada registro de 10s é uma instância única. Shape resultante: 21.837 × 1000 × 12. Vantagens: Prescreve o contexto clínico original do exame; evita inflação artificial de labels (label inflation); elimina vazamento de dados (leakage) por sobreposição de janelas; mantém a unidade de análise idêntica à do cardiologista.
 
-**Opção B — Janelas fixas sobrepostas:** Cada registro é dividido em N janelas de tamanho W amostras com overlap de O amostras. Shape resultante: (N × 21.837) × W × 12. Parâmetros recomendados: W = 250 amostras (2,5 segundos a 100 Hz), O = 125 amostras (50% de sobreposição). Justificativa fisiológica: 2,5 segundos contém em média 2–3 ciclos cardíacos (FC média ~70–80 bpm = 0.8–0.86 s/batimento), suficiente para capturar pelo menos 2 complexos QRS-T completos.
+**Opção B — Janelas fixas sobrepostas:** Cada registro é dividido em N janelas de tamanho W amostras com overlap. Embora comum em deep learning, para este projeto com features clássicas, esta opção introduz redundância e correlação artificial entre instâncias do mesmo registro.
 
-**Opção C — Segmentação por batimento (beat segmentation):** Detectar cada pico R e extrair janela centrada ao redor dele (ex: 200 ms antes do pico, 400 ms depois = 600 ms total = 60 amostras a 100 Hz). Ideal para análise de morfologia individual do batimento e para HRV. Desvantagem: requer detecção confiável de pico R, que pode falhar em sinais de baixa qualidade ou arritmias.
+**Opção C — Segmentação por batimento (Beat-based):** Detectar cada pico R e extrair janelas de ~600ms. Abordagem fundamental para extração de atributos de morfologia (QRS, ST, T) e variabilidade da frequência cardíaca (HRV).
 
-Documentar a escolha. Recomendação: implementar **Opção B** como abordagem principal (mais robusta), e **Opção C** como abordagem complementar para extração de features de morfologia e HRV no Entregável 6.
+**Decisão Metodológica:** Implementar a **Opção A** como a estrutura principal do dataset para o restante do pipeline. A **Opção C** será implementada como uma etapa intermediária de extração de atributos: os batimentos serão detectados, suas features calculadas, e então agregadas (média/desvio padrão) de volta para o nível do registro de 10 segundos. Isso garante um modelo final mais robusto e clinicamente coerente.
 
 **Subseção 1.2 — Propagação de Labels em Ambiente Multi-Label**
 
@@ -705,23 +705,24 @@ Problema específico do PTB-XL: cada janela herda os labels do registro original
 
 ---
 
-### Seção 2 — Implementação — Opção B (Janelas Fixas Sobrepostas)
+### Seção 2 — Implementação — Opção A (Instância Única)
 
-**Subseção 2.1 — Função de Janelamento**
+**Subseção 2.1 — Propagação de Metadados**
 
-Implementar `create_windows(signal, window_size, overlap, fs)` que:
-- Recebe: array (n_amostras, 12), tamanho da janela em amostras, overlap em amostras, fs
-- Retorna: array 3D (n_janelas, window_size, 12)
-- Calcula o número de janelas: `n_windows = 1 + floor((n_amostras - window_size) / (window_size - overlap))`
-- Para a versão com W=250 e O=125 a 100 Hz: cada registro de 1000 amostras gera 7 janelas não bordadas (garantir que a última janela seja descartada se incompleta — não fazer padding)
+Como o registro de 10s é a instância, não há necessidade de fatiamento. O array de entrada (`sinais_limpos_100hz.npy`) já possui o shape (N, 1000, 12). A implementação foca na criação de um arquivo de mapeamento `registros_ids.csv` que contenha: ecg_id, patient_id, strat_fold, sqi_category, diagnostic_superclass (lista serializada).
 
-Aplicar a todos os registros e criar:
-- `janelas_segmentadas.npy` — shape (N_total_janelas, 250, 12)
-- `janelas_ids.csv` — DataFrame com colunas: janela_id, ecg_id, patient_id, strat_fold, sqi_category, diagnostic_superclass (string serializada da lista)
+Validar que a ordem dos registros no array segue exatamente a ordem do CSV de metadados.
 
 **Subseção 2.2 — Verificação de Completude**
 
-Calcular o número total de janelas geradas por superclasse diagnóstica (contando multi-label: uma janela de um registro MI+CD conta para MI E para CD). Verificar que o número de janelas por fold é aproximadamente proporcional ao número de registros por fold (esperado para segmentação uniforme).
+Resumir a quantidade de instâncias por superclasse diagnóstica e por fold. Confirmar que o balanceamento original do dataset foi preservado.
+
+Criar:
+- `registros_ids.csv` — DataFrame mestre para as instâncias de 10s.
+
+**Subseção 2.2 — Verificação de Completude**
+
+Confirmar que o número de instâncias por fold é idêntico ao reportado no Entregável 4 após o filtro SQI.
 
 ---
 
@@ -810,24 +811,21 @@ Implementar extração em batch com paralelização usando `joblib.Parallel`. Es
 
 ---
 
-### Seção 2 — Features de Domínio do Tempo (Janelas Opção B: 250 amostras × 12 derivações)
+### Seção 2 — Features de Domínio do Tempo (Registro Inteiro — 10s)
 
-**Subseção 2.1 — Estatísticas Básicas de Amplitude**
+**Subseção 2.1 — Estatísticas Globais de Amplitude**
+...
+(Features como RMS, MAV, ZCR calculadas sobre os 10s em todas as derivações)
 
-Para cada janela e cada derivação calcular:
-- **Mean (µ):** média aritmética das amostras — idealmente próxima de 0 após filtragem passa-alta
-- **RMS:** raiz da média dos quadrados — `sqrt(mean(x²))` — representa a magnitude energética do sinal
-- **MAV (Mean Absolute Value):** `mean(|x|)` — menos sensível a outliers que RMS
-- **Variância:** `var(x)` — dispersion ao redor da média
-- **Desvio Padrão:** `std(x)`
-- **Amplitude Pico-a-Pico:** `max(x) - min(x)` — detecta modulações de amplitude
-- **Skewness e Kurtosis:** da amplitude (diferentes das do SQI — aqui são features, não métricas de qualidade)
+### Seção 3 — Features de Morfologia e HRV (Baseadas na Opção C)
 
-Total: 7 features × 12 derivações = 84 features
+**Subseção 3.1 — Atributos de Batimento**
 
-**Subseção 2.2 — Zero Crossing Rate (ZCR)**
+Utilizar o array de batimentos (Opção C) para extrair atributos por batimento individual (Duração QRS, Amplitude R, Segmento ST, etc.).
 
-`ZCR = sum(sign(x[1:]) != sign(x[:-1])) / (len(x) - 1)` — proporção de mudanças de sinal por amostra. Em ECG, ZCR alta em uma derivação pode indicar ruído de alta frequência residual ou QRS fragmentado. Calcular por derivação. Total: 12 features.
+**Subseção 3.2 — Agregação para Nível de Registro**
+
+Para cada atributo (ex: `qrs_duration`), calcular a **Média** e o **Desvio Padrão** de todos os batimentos válidos do registro. Isso transforma as instâncias de batimento de volta em colunas do dataset de 10s. Exemplo: `qrs_duration_mean_II`, `qrs_duration_std_II`.
 
 **Subseção 2.3 — Features de Morfologia ECG (derivações DII, V5)**
 

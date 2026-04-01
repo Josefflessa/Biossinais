@@ -88,9 +88,9 @@ FOLDS_TREINO = [1, 2, 3, 4, 5, 6, 7, 8]
 FOLD_VAL = 9
 FOLD_TEST = 10
 
-caminho_metadados = '../../entregavel-2/outputs/ptbxl_com_sqi.csv'
-dir_saidas = '../outputs'
-FIGS_DIR = '../figuras/'
+caminho_metadados = os.path.abspath('../../entregavel-2/outputs/ptbxl_com_sqi.csv')
+dir_saidas = os.path.abspath('../outputs')
+FIGS_DIR = os.path.abspath('../figuras/')
 os.makedirs(dir_saidas, exist_ok=True)
 os.makedirs(FIGS_DIR, exist_ok=True)""")
 
