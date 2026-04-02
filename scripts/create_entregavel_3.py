@@ -50,11 +50,8 @@ def add_code(content):
 # =====================================================================
 add_markdown("""# Entregável 3: Análise Estatística Inicial da Base
 **Disciplina:** Aquisição de Biossinais
-**Autor(es):** José Ferreira Lessa e Matheus Rocha Gomes da Silva
-**Data:** Março de 2026""")
-
-add_markdown("""## Objetivo
-Este notebook caracteriza estatisticamente o dataset antes de qualquer transformação nos sinais. Vamos verificar se as variáveis seguem distribuição normal, se as variâncias são homogêneas entre as classes diagnósticas, e quais correlações existem. Esses resultados orientam diretamente as escolhas dos entregáveis seguintes — por exemplo, se devemos usar testes paramétricos ou não-paramétricos.""")
+**Equipe:** José Ferreira Lessa e Matheus Rocha Gomes da Silva
+**Objetivo:** Este notebook caracteriza estatisticamente o dataset antes de qualquer transformação nos sinais. Vamos verificar se as variáveis seguem distribuição normal, se as variâncias são homogêneas entre as classes diagnósticas, e quais correlações existem. Esses resultados orientam diretamente as escolhas dos entregáveis seguintes — por exemplo, se devemos usar testes paramétricos ou não-paramétricos.""")
 
 add_markdown("""## 1. Importações""")
 

@@ -50,11 +50,8 @@ def add_code(content):
 # =====================================================================
 add_markdown("""# Entregável 4: Limpeza e Filtragem Digital dos Sinais
 **Disciplina:** Aquisição de Biossinais
-**Autor(es):** José Ferreira Lessa e Matheus Rocha Gomes da Silva
-**Data:** Março de 2026""")
-
-add_markdown("""## Objetivo
-Neste notebook, aplicamos uma pipeline de filtragem digital para remover ruídos instrumentais dos sinais de ECG sem destruir a informação fisiológica. Cada filtro tem justificativa técnica e é validado estatisticamente via comparação antes/depois (teste de Wilcoxon pareado + Cohen's d). Ao final, todos os sinais limpos são exportados em formato NumPy para uso nos entregáveis seguintes.""")
+**Equipe:** José Ferreira Lessa e Matheus Rocha Gomes da Silva
+**Objetivo:** Neste notebook, aplicamos uma pipeline de filtragem digital para remover ruídos instrumentais dos sinais de ECG sem destruir a informação fisiológica. Cada filtro tem justificativa técnica e é validado estatisticamente via comparação antes/depois (teste de Wilcoxon pareado + Cohen's d). Ao final, todos os sinais limpos são exportados em formato NumPy para uso nos entregáveis seguintes.""")
 
 add_markdown("""## 1. Importações""")
 

@@ -50,14 +50,8 @@ def add_code(content):
 # =====================================================================
 add_markdown("""# Entregável 1: Aquisição de Biossinais e Caracterização do Dataset PTB-XL
 **Disciplina:** Aquisição de Biossinais
-**Autor(es):** José Ferreira Lessa e Matheus Rocha Gomes da Silva
-**Data:** Março de 2026""")
-
-# =====================================================================
-# CÉLULA 2 - OBJETIVO
-# =====================================================================
-add_markdown("""## Objetivo
-Este notebook tem como objetivo documentar as condições originais de aquisição do dataset PTB-XL, caracterizar a base de dados de forma demográfica e clínica, e realizar inspeções visuais do sinal bruto de ECG. Aqui não fazemos nenhuma transformação nos sinais — a saída é um arquivo de metadados enriquecido (`ptbxl_metadata_enriched.csv`) que servirá de base para todos os notebooks subsequentes do pipeline.""")
+**Equipe:** José Ferreira Lessa e Matheus Rocha Gomes da Silva
+**Objetivo:** Este notebook tem como objetivo documentar as condições originais de aquisição do dataset PTB-XL, caracterizar a base de dados de forma demográfica e clínica, e realizar inspeções visuais do sinal bruto de ECG.""")
 
 # =====================================================================
 # CÉLULA 3 - IMPORTAÇÕES

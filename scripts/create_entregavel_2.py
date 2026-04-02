@@ -50,14 +50,8 @@ def add_code(content):
 # =====================================================================
 add_markdown("""# Entregável 2: Avaliação da Qualidade do Sinal (SQI)
 **Disciplina:** Aquisição de Biossinais
-**Autor(es):** José Ferreira Lessa e Matheus Rocha Gomes da Silva
-**Data:** Março de 2026""")
-
-# =====================================================================
-# CÉLULA 2 - OBJETIVO
-# =====================================================================
-add_markdown("""## Objetivo
-Neste notebook, vamos atribuir a cada registro do PTB-XL um índice objetivo de qualidade de sinal (SQI — *Signal Quality Index*) baseado em múltiplas métricas extraídas diretamente dos sinais brutos. A partir desse score, cada registro será categorizado em níveis de qualidade (A, B ou C), determinando quais seguirão adiante no pipeline e quais serão descartados por ruído irrecuperável.""")
+**Equipe:** José Ferreira Lessa e Matheus Rocha Gomes da Silva
+**Objetivo:** Neste notebook, vamos atribuir a cada registro do PTB-XL um índice objetivo de qualidade de sinal (SQI — *Signal Quality Index*) baseado em múltiplas métricas extraídas diretamente dos sinais brutos. A partir desse score, cada registro será categorizado em níveis de qualidade (A, B ou C), determinando quais seguirão adiante no pipeline e quais serão descartados por ruído irrecuperável.""")
 
 # =====================================================================
 # CÉLULA 3 - IMPORTAÇÕES
