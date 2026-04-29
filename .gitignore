@@ -1,16 +1,13 @@
-# Data files (Matrizes pesadas de Biossinais)
+# Data files (Biossinais pesados)
 *.npy
 *.npy.gz
 *.pkl
 *.mat
 
-# Pasta de outputs (gerados pelos scripts)
-**/outputs/*.csv
-**/outputs/*.npy
-**/outputs/*.pkl
-**/outputs/*.txt
+# Outputs (qualquer formato)
+outputs/
 
-# Pasta de sinais brutos (PTB-XL)
+# Dados brutos
 records100/
 records500/
 
@@ -22,6 +19,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# OS Files
+# OS
 .DS_Store
 Thumbs.db
