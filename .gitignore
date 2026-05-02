@@ -1,4 +1,5 @@
 # Data files (Biossinais pesados)
+data/
 *.dat
 *.hea
 *.npy
