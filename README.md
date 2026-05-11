@@ -333,27 +333,6 @@ Abra cada notebook em `entregaveis/entregavel-X/notebooks/` e execute todas as c
 
 > \*\*Aviso de tempo:\*\* o E4 (processamento em lote de \~20.000 sinais), o E6 (extração de features com `joblib`) e o E9 (SBE) são as etapas mais custosas. O E9 persiste os resultados dos wrappers e do LASSO em disco, permitindo reexecução sem recalcular do zero.
 
-### 4\. Relatório Final
-
-O documento final (TCC) é compilado no Overleaf usando o template UFC disponível em `docs/Modelo\_de\_Trabalho\_Academico\_UFC.zip`. Figures e notebooks finais ficam em `documento-final/`.
-
-\---
-
-## Decisões Metodológicas Relevantes
-
-|Decisão|Justificativa|
-|-|-|
-|Taxa de amostragem 100 Hz|Supera o critério de Nyquist para a banda diagnóstica do ECG (0,05–40 Hz) com margem de 25%; reduz custo computacional em 5× em relação a 500 Hz|
-|Filtro notch 50 Hz dispensado|O downsampling original (500 → 100 Hz) já aplicou anti-aliasing; 50 Hz coincide com a frequência de Nyquist, impossibilitando filtro estável|
-|Limiar SQI likelihood ≥ 50%|Convenção do PTB-XL para diagnóstico positivo|
-|Winsorização por percentil 0,5–99,5%|Controla outliers de amplitude sem remoção de amostras; limites calculados no treino para evitar data leakage|
-|Segmentação Pan-Tompkins|Método de referência para detecção de pico R; período refratário adaptativo (60% do RR mediano) permite lidar com taquicardias|
-|RobustScaler antes de StandardScaler|RobustScaler (E7) torna o vetor invariante a outliers; StandardScaler adicional (E8/E9) garante variância unitária para PCA, VIF e LDA|
-|Testes não-paramétricos|Normalidade e homocedasticidade rejeitadas para todas as variáveis (E3); Kruskal-Wallis, Mann-Whitney e correlação de Spearman são os métodos padrão adotados|
-|Borda Count ponderado para ranking final|Método de agregação robusto que não requer comparabilidade de escalas entre diferentes critérios de relevância|
-
-\---
-
 ## Referências Principais
 
 * Wagner et al. (2020). *PTB-XL, a large publicly available electrocardiography dataset*. Scientific Data, 7(1), 154.
